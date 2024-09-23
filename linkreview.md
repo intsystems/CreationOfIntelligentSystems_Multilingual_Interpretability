@@ -10,4 +10,5 @@
 | :--- | :--- | ---: | :--- | :--- | :--- |
 | How do Large Language Models Handle Multilingualism? [@Nikita_Okhotnikov](https://github.com/Wayfarer123) | 2024 | Yiran Zhao, Wenxuan Zhang, Guizhen Chen, Kenji Kawaguchi, Lidong Bing | [arxiv preprint](https://arxiv.org/pdf/2402.18815) | - | TODO |
 | Unraveling Babel: Exploring Multilingual Activation Patterns of LLMs and Their Applications [@Anastasia Voznyuk](https://github.com/natriistorm) | 2024 | Weize Liu, Yinlong Xu, Hongxia Xu, Jintai Chen, Xuming Hu, Jian Wu | [arxiv preprint](https://arxiv.org/pdf/2402.16367) | - | TODO |
+| Language-Specific Neurons: The Key to Multilingual Capabilities in Large Language Models [@Andrei Semenov](https://github.com/Andron00e) | 2024 | ... | [arxiv](https://arxiv.org/abs/2402.16438) | [GitHub](https://github.com/RUCAIBox/Language-Specific-Neurons) | TODO |
 
