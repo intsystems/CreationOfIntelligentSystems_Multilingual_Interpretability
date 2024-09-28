@@ -19,5 +19,11 @@
     </tr>
 </table>
 
+## 🔎 Idea and Novelty
+
 ## 💡 Abstract
-TODO
+
+
+## 🔗 Useful links
+- [Brain Imaging Data Structure (BIDS) Starter Kit](https://bids-standard.github.io/bids-starter-kit/index.html)
+- [OpenNeuroDatasets](https://github.com/OpenNeuroDatasets)
