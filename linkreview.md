@@ -25,7 +25,7 @@ Detecting and Exploring Task-Specific Neurons [@Andrei Semenov](https://github.c
 | Evaluating Neuron Interpretation Methods of NLP Models [@Andrei Semenov](https://github.com/Andron00e) | 2023 | ... | [arxiv](https://arxiv.org/abs/2301.12608) | [GitHub](https://github.com/fdalvi/neuron-comparative-analysis) | TODO |
 | Causal Interpretation of Self-Attention in Pre-Trained Transformers [@Andrei Semenov](https://github.com/Andron00e) | 2023 | ... | [arxiv](https://arxiv.org/abs/2310.20307) | [GitHub](https://github.com/IntelLabs/causality-lab) | TODO |
 | Getting More from Less: Large Language Models are Good Spontaneous Multilingual Learners [@Andrei Semenov](https://github.com/Andron00e) | 2024 | ... | [arxiv](https://arxiv.org/abs/2405.13816) | [GitHub](https://github.com/Shimao-Zhang/LLM-Multilingual-Learner) | TODO |
-| Sharing Matters: Analysing Neurons Across Languages and Tasks in LLMs  [@Nikita_Okhotnikov](https://github.com/Wayfarer123) |  | ... | [arxiv preprint](https://arxiv.org/pdf/2406.09265) | [GitHub](https://github.com/weixuan-wang123/multilingual-neurons) | TODO |
+| Sharing Matters: Analysing Neurons Across Languages and Tasks in LLMs  [@Nikita_Okhotnikov](https://github.com/Wayfarer123) | 2024 | Weixuan Wang, Barry Haddow, Wei Peng, Alexandra Birch | [arxiv preprint](https://arxiv.org/pdf/2406.09265) | [GitHub](https://github.com/weixuan-wang123/multilingual-neurons) | TODO |
 |   |  | ... | [arxiv]() |  | TODO |
 |   |  | ... | [arxiv]() |  | TODO |
 
