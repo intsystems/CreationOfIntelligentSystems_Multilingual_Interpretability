@@ -1,9 +1,9 @@
-# Improved multilingual performance with language specific neurons
+# Improved multilingual performance with language specific heads
 
 <table>
     <tr>
         <td align="left"> <b> Title </b> </td>
-        <td> Improved multilingual performance with language specific neurons </td>
+        <td> Improved multilingual performance with language specific heads </td>
     </tr>
     <tr>
         <td align="left"> <b> Authors </b> </td>
