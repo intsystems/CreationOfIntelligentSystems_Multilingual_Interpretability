@@ -26,6 +26,4 @@ Detecting and Exploring Task-Specific Neurons [@Andrei Semenov](https://github.c
 | Causal Interpretation of Self-Attention in Pre-Trained Transformers [@Andrei Semenov](https://github.com/Andron00e) | 2023 | ... | [arxiv](https://arxiv.org/abs/2310.20307) | [GitHub](https://github.com/IntelLabs/causality-lab) | TODO |
 | Getting More from Less: Large Language Models are Good Spontaneous Multilingual Learners [@Andrei Semenov](https://github.com/Andron00e) | 2024 | ... | [arxiv](https://arxiv.org/abs/2405.13816) | [GitHub](https://github.com/Shimao-Zhang/LLM-Multilingual-Learner) | TODO |
 | Beneath the Surface of Consistency: Exploring Cross-lingual Knowledge Representation Sharing in LLMs [@Nikita_Okhotnikov](https://github.com/Wayfarer123) | 2024 | Maxim Ifergan, Leshem Choshen, Roee Aharoni, Idan Szpektor, Omri Abend | [arxiv preprint](https://www.arxiv.org/pdf/2408.10646) | - | LLM factual knowledge are inconsistent across languages. The methodology to measure knowledge representations sharing across languages proposed. Script similarity -- dominant factor in representation sharing. Multiligual sharing has a potential to increase performance in the best-performing language. |
-|   |  | ... | [arxiv]() |  | TODO |
-|   |  | ... | [arxiv]() |  | TODO |
 
