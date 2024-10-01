@@ -24,3 +24,8 @@
 ## 💡 Abstract
 
 ## 🔗 Useful links
+
+## 📜 Datsets
+
+1. CLIKE (from Beneath the Surface of Consistency: Exploring Cross-lingual Knowledge Representation Sharing in LLMs) - intended for evaluate factual knowledge on 35 languages
+
