@@ -8,7 +8,7 @@
 
 | Title | Year | Authors | Paper | Code | Summary |
 | :--- | :--- | ---: | :--- | :--- | :--- |
-| How do Large Language Models Handle Multilingualism? [@Nikita_Okhotnikov](https://github.com/Wayfarer123) | 2024 | Yiran Zhao, Wenxuan Zhang, Guizhen Chen, Kenji Kawaguchi, Lidong Bing | [arxiv preprint](https://arxiv.org/pdf/2402.18815) | - | TODO |
+| How do Large Language Models Handle Multilingualism? [@Nikita_Okhotnikov](https://github.com/Wayfarer123) | 2024 | Yiran Zhao, Wenxuan Zhang, Guizhen Chen, Kenji Kawaguchi, Lidong Bing | [arxiv preprint](https://arxiv.org/pdf/2402.18815) | - | Authors define "language specific neurons" that dramatically affect the performance on a single language and finetune these on little training corpus gaining noticeable performance uplift |
 | Unraveling Babel: Exploring Multilingual Activation Patterns of LLMs and Their Applications [@Anastasia Voznyuk](https://github.com/natriistorm) | 2024 | Weize Liu, Yinlong Xu, Hongxia Xu, Jintai Chen, Xuming Hu, Jian Wu | [arxiv preprint](https://arxiv.org/pdf/2402.16367) | - | TODO |
 | Language-Specific Neurons: The Key to Multilingual Capabilities in Large Language Models [@Andrei Semenov](https://github.com/Andron00e) | 2024 | ... | [arxiv](https://arxiv.org/abs/2402.16438) | [GitHub](https://github.com/RUCAIBox/Language-Specific-Neurons) | TODO |
 | On the cross-lingual transferability of monolingual representations [@Alexander Terentyev](https://github.com/lopate) | 2020 | Artetxe, Mikel, Sebastian Ruder, and Dani Yogatama. | [arxiv](https://arxiv.org/abs/1910.11856) | - | TODO |
@@ -25,7 +25,7 @@ Detecting and Exploring Task-Specific Neurons [@Andrei Semenov](https://github.c
 | Evaluating Neuron Interpretation Methods of NLP Models [@Andrei Semenov](https://github.com/Andron00e) | 2023 | ... | [arxiv](https://arxiv.org/abs/2301.12608) | [GitHub](https://github.com/fdalvi/neuron-comparative-analysis) | TODO |
 | Causal Interpretation of Self-Attention in Pre-Trained Transformers [@Andrei Semenov](https://github.com/Andron00e) | 2023 | ... | [arxiv](https://arxiv.org/abs/2310.20307) | [GitHub](https://github.com/IntelLabs/causality-lab) | TODO |
 | Getting More from Less: Large Language Models are Good Spontaneous Multilingual Learners [@Andrei Semenov](https://github.com/Andron00e) | 2024 | ... | [arxiv](https://arxiv.org/abs/2405.13816) | [GitHub](https://github.com/Shimao-Zhang/LLM-Multilingual-Learner) | TODO |
-| Sharing Matters: Analysing Neurons Across Languages and Tasks in LLMs  [@Nikita_Okhotnikov](https://github.com/Wayfarer123) | 2024 | Weixuan Wang, Barry Haddow, Wei Peng, Alexandra Birch | [arxiv preprint](https://arxiv.org/pdf/2406.09265) | [GitHub](https://github.com/weixuan-wang123/multilingual-neurons) | TODO |
+| Beneath the Surface of Consistency: Exploring Cross-lingual Knowledge Representation Sharing in LLMs [@Nikita_Okhotnikov](https://github.com/Wayfarer123) | 2024 | Maxim Ifergan, Leshem Choshen, Roee Aharoni, Idan Szpektor, Omri Abend | [arxiv preprint](https://www.arxiv.org/pdf/2408.10646) | - | LLM factual knowledge are inconsistent across languages. The methodology to measure knowledge representations sharing across languages proposed. Script similarity -- dominant factor in representation sharing. Multiligual sharing has a potential to increase performance in the best-performing language. |
 |   |  | ... | [arxiv]() |  | TODO |
 |   |  | ... | [arxiv]() |  | TODO |
 
