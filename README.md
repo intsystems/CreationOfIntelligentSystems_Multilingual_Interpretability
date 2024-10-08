@@ -21,7 +21,7 @@
 
 ## 🔎 Idea and Novelty
 
-Following the work of Beneath the Surface of Consistency: Exploring Cross-lingual Knowledge Representation Sharing in LLMs, we suggest to compare performance of various tasks aimed to measure ability of factual transition between different languages. One of the possible task can be MCQA. Our idea is also close to estimation of level of hallucination between languages.
+Following the work of Beneath the Surface of Consistency: Exploring Cross-lingual Knowledge Representation Sharing in LLMs, we suggest to compare performance of various tasks aimed to measure ability of factual transition between different languages. One of the possible task can be MCQA. We want to evaluate langiage-specific neurons, activate and deactivate them and see how LLM performance on specific tasks change.
 
 
 ## 💡 Abstract
