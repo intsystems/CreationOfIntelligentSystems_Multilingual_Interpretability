@@ -1,5 +1,7 @@
-from modules import *
+from .modules import *
 from torch.utils.data import Dataset
+
+from src.modules import Qwen2MLP_ND, Qwen2SdpaAttention_ND
 
 
 def convert_to_Qwen2_ND(
