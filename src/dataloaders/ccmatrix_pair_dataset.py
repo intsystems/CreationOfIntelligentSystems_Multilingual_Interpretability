@@ -1,15 +1,17 @@
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import IterableDataset, DataLoader
 from datasets import load_dataset
 import itertools
 
 
-class CCMatrixPairDataset(Dataset):
+class CCMatrixPairDataset(IterableDataset):
     def __init__(self, language_pair='en-ru'):
-        self.data = load_dataset("yhavinga/ccmatrix", language_pair, streaming=True)
+        self.language_pair = language_pair
+        self.data = load_dataset("yhavinga/ccmatrix", self.language_pair, streaming=True)
 
-    def __getitem__(self, idx):
-        raise NotImplementedError("Streaming dataset does not support indexing")
-
+    def __iter__(self):
+        for item in self.data['train']:
+            sentence1, sentence2 = item['translation'].values()
+            yield sentence1, sentence2
 
 def collate_fn(batch):
     sentence1_batch, sentence2_batch = zip(*batch)
