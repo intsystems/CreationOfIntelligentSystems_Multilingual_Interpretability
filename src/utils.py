@@ -1,8 +1,6 @@
-from .modules import *
+from modules import *
 from torch.utils.data import Dataset
-
-from src.modules import Qwen2MLP_ND, Qwen2SdpaAttention_ND
-
+import torch.nn.functional as F
 
 def convert_to_Qwen2_ND(
     qwen
@@ -79,15 +77,13 @@ class Collator:
             self.tokenizer_kwargs["add_special_tokens"] = add_special_tokens
     
     def __call__(self, batch):
-        texts = [elem["text"] for elem in batch]
-        labels = [elem.get(["label"], None) for elem in batch if elem.get(["label"], None) is not None]
+        texts = [list(elem["translation"].values())[0] for elem in batch]
+        # labels = [elem.get(["label"], None) for elem in batch if elem.get(["label"], None) is not None]
         tokenized = self.tokenizer(texts, return_tensors="pt", **self.tokenizer_kwargs)
-        labels = torch.tensor(labels, dtype=torch.long)
-
+        # labels = torch.tensor(labels, dtype=torch.long)
         input_ids = tokenized["input_ids"]
         attention_mask = tokenized["attention_mask"]
-    
-        return input_ids, attention_mask, labels
+        return input_ids, attention_mask
     
 
 def detect_domain_specific_neurons_for_layer(
@@ -138,31 +134,53 @@ def detect_domain_specific_neurons_for_layer(
 
 def calculate_impacts(
     model,
-    dataloader
+    tokenizer,
+    dataloader,
+    num_elements
 ):
     model.eval()
     outputs = []
     with torch.no_grad():
-        for batch in dataloader:
-            output = model(batch[0], batch[1])
-            outputs.append(output["last_hidden_state"].cpu())
-    outputs = torch.cat(outputs, dim=0)
-    return output
+        dataloader_iter = iter(dataloader)
+        i = 0
+        while i < num_elements:
+            try:
+                batch = next(dataloader_iter)
+                output = model(batch[0].to('cuda'), batch[1].to('cuda'))
+                outputs.append(output["last_hidden_state"].cpu())
+                i += 1
+            except StopIteration:
+                break
+
+    max_size = max(tensor.size(1) for tensor in outputs)
+
+    padded_tensors = [
+        F.pad(tensor, (0, 0, 0, max_size - tensor.size(1))) for tensor in outputs
+    ]
+
+    concatenated_tensor = torch.cat(padded_tensors, dim=1)
+
+    return concatenated_tensor
 
 
 def detect_domain_specific_neurons(
     model,
+    tokenizer,
     dataloader=None,
     eps=1e-2,
     domain_name="eng", 
     reset_impacts=False,
-    reset_dsn=True
+    reset_dsn=True,
+    num_elements=10000
 ):
     model.eval()
 
     if dataloader is not None:
-        _ = calculate_impacts(model, dataloader)
+        outputs = calculate_impacts(model, tokenizer, dataloader, num_elements)
+    else:
+        outputs = None
 
+    
     for i in range(len(model.layers)):
         detect_domain_specific_neurons_for_layer(
             model.layers[i].mlp, 
@@ -181,4 +199,4 @@ def detect_domain_specific_neurons(
             reset_dsn=reset_dsn
         )
 
-    return model
+    return model, outputs

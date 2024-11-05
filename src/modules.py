@@ -141,7 +141,6 @@ class Qwen2SdpaAttention_ND(nn.Module):
             Delta(x) = W_Q(x).resize(l, 1, d_mid) * W_K(x).resize(1, l, d_mid)
         '''
         bsz, q_len, _ = hidden_states.size()
-
         query_states = self.q_proj(hidden_states)
         key_states = self.k_proj(hidden_states)
         value_states = self.v_proj(hidden_states)
@@ -167,7 +166,6 @@ class Qwen2SdpaAttention_ND(nn.Module):
         causal_mask = attention_mask
         if attention_mask is not None:  # no matter the length, we just slice it
             causal_mask = attention_mask[:, :, :, : key_states.shape[-2]]
-
         # SDPA with memory-efficient backend is currently (torch==2.1.2) bugged with non-contiguous inputs with custom attn_mask,
         # Reference: https://github.com/pytorch/pytorch/issues/112577.
         if query_states.device.type == "cuda" and attention_mask is not None:
@@ -192,16 +190,15 @@ class Qwen2SdpaAttention_ND(nn.Module):
         if self.calculate_impacts:
             with torch.no_grad():
                 Delta_x = (query_states.unsqueeze(-2) * key_states.unsqueeze(-3)).detach()
-
+                B, H = causal_mask.size(0), causal_mask.size(1)
                 L, S = query_states.size(-2), key_states.size(-2)
                 scale_factor = 1 / query_states.size(-1) ** 0.5
-                attn_bias = torch.zeros(L, S, dtype=query_states.dtype).to(query_states.device)
+                attn_bias = torch.zeros(B, H, L, S, dtype=query_states.dtype).to(query_states.device)
                 if is_causal:
                     assert causal_mask is None
-                    temp_mask = torch.ones(L, S, dtype=torch.bool).tril(diagonal=0).to(query_states.device)
+                    temp_mask = torch.ones(B, H, L, S, dtype=torch.bool).tril(diagonal=0).to(query_states.device)
                     attn_bias.masked_fill_(temp_mask.logical_not(), float("-inf"))
                     attn_bias.to(query_states.dtype)
-
                 if causal_mask is not None:
                     if causal_mask.dtype == torch.bool:
                         attn_bias.masked_fill_(causal_mask.logical_not(), float("-inf"))
