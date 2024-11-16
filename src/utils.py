@@ -1,6 +1,8 @@
 from modules import *
 from torch.utils.data import Dataset
 import torch.nn.functional as F
+from tqdm.auto import tqdm
+
 
 def convert_to_Qwen2_ND(
     qwen
@@ -38,6 +40,19 @@ def impacts_on(
         qwen_nd.layers[i].mlp.calculate_impacts = True
         qwen_nd.layers[i].self_attn.calculate_impacts = True
     return qwen_nd
+
+
+def get_all_dsn(
+    qwen_nd
+):
+    all_dsn = []
+    for i in range(len(qwen_nd.layers)):
+        all_dsn.append({
+            "mlp": qwen_nd.layers[i].mlp.dsn,
+            "attn": qwen_nd.layers[i].self_attn.dsn
+        })
+
+    return all_dsn
 
 
 class ImpactsDataset(Dataset):
@@ -134,7 +149,6 @@ def detect_domain_specific_neurons_for_layer(
 
 def calculate_impacts(
     model,
-    tokenizer,
     dataloader,
     num_elements
 ):
@@ -142,15 +156,17 @@ def calculate_impacts(
     outputs = []
     with torch.no_grad():
         dataloader_iter = iter(dataloader)
-        i = 0
-        while i < num_elements:
-            try:
-                batch = next(dataloader_iter)
-                output = model(batch[0].to('cuda'), batch[1].to('cuda'))
-                outputs.append(output["last_hidden_state"].cpu())
-                i += 1
-            except StopIteration:
-                break
+        with tqdm(total=num_elements) as pbar:
+            i = 0
+            while i < num_elements:
+                try:
+                    batch = next(dataloader_iter)
+                    pbar.update(len(batch))
+                    output = model(batch[0].to('cuda'), batch[1].to('cuda'))
+                    outputs.append(output["last_hidden_state"].cpu())
+                    i += len(batch)
+                except StopIteration:
+                    break
 
     max_size = max(tensor.size(1) for tensor in outputs)
 
@@ -176,7 +192,7 @@ def detect_domain_specific_neurons(
     model.eval()
 
     if dataloader is not None:
-        outputs = calculate_impacts(model, tokenizer, dataloader, num_elements)
+        outputs = calculate_impacts(model, dataloader, num_elements)
     else:
         outputs = None
 
