@@ -57,6 +57,7 @@ class Qwen2MLP_ND(nn.Module):
         self.up_proj.impacts = None
         self.down_proj.impacts = None
         self.calculate_impacts = True
+        self.dsn = None
 
     def __from_MLP(self, mlp):
         self.hidden_size = mlp.hidden_size
@@ -104,6 +105,7 @@ class Qwen2SdpaAttention_ND(nn.Module):
         self.q_proj.impacts = None
         self.k_proj.impacts = None
         self.calculate_impacts = True
+        self.dsn = None
 
     def __from_Sdpa(self, sdpa):
         self.hidden_size = sdpa.hidden_size
@@ -190,13 +192,13 @@ class Qwen2SdpaAttention_ND(nn.Module):
         if self.calculate_impacts:
             with torch.no_grad():
                 Delta_x = (query_states.unsqueeze(-2) * key_states.unsqueeze(-3)).detach()
-                B, H = causal_mask.size(0), causal_mask.size(1)
                 L, S = query_states.size(-2), key_states.size(-2)
+
                 scale_factor = 1 / query_states.size(-1) ** 0.5
-                attn_bias = torch.zeros(B, H, L, S, dtype=query_states.dtype).to(query_states.device)
+                attn_bias = torch.zeros(bsz, L, S, dtype=query_states.dtype).to(query_states.device).unsqueeze(1)
                 if is_causal:
                     assert causal_mask is None
-                    temp_mask = torch.ones(B, H, L, S, dtype=torch.bool).tril(diagonal=0).to(query_states.device)
+                    temp_mask = torch.ones(bsz, L, S, dtype=torch.bool).tril(diagonal=0).to(query_states.device).unsqueeze(1)
                     attn_bias.masked_fill_(temp_mask.logical_not(), float("-inf"))
                     attn_bias.to(query_states.dtype)
                 if causal_mask is not None:
