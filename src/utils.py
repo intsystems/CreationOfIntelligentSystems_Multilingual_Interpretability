@@ -2,6 +2,7 @@ from modules import *
 from torch.utils.data import Dataset
 import torch.nn.functional as F
 from tqdm.auto import tqdm
+import warnings
 
 
 def convert_to_Qwen2_ND(
@@ -120,10 +121,10 @@ def detect_domain_specific_neurons_for_layer(
     if type == 'mlp':
         if layer.up_proj.impacts is not None:
             if layer_dsn[domain_name].get("up_proj", None) is None:
-                layer_dsn[domain_name]["up_proj"] = torch.all(torch.abs(layer.up_proj.impacts) > eps, dim=0)
+                layer_dsn[domain_name]["up_proj"] = torch.all(torch.abs(layer.up_proj.impacts) > eps, dim=0).reshape(-1, 1)
             else:
-                layer_dsn[domain_name]["up_proj"] = layer_dsn[domain_name]["up_proj"] * torch.all(torch.abs(layer.up_proj.impacts) > eps, dim=0)
-            layer_dsn[domain_name]["down_proj"] = layer_dsn[domain_name]["up_proj"]
+                layer_dsn[domain_name]["up_proj"] = layer_dsn[domain_name]["up_proj"] * torch.all(torch.abs(layer.up_proj.impacts) > eps, dim=0).reshape(-1, 1)
+            layer_dsn[domain_name]["down_proj"] = layer_dsn[domain_name]["up_proj"].reshape(1, -1)
 
             if reset_impacts:
                 layer.up_proj.impacts = None
@@ -133,10 +134,10 @@ def detect_domain_specific_neurons_for_layer(
     elif type == 'attn':
         if layer.q_proj.impacts is not None:
             if layer_dsn[domain_name].get("q_proj", None) is None:
-                layer_dsn[domain_name]["q_proj"] = torch.all(torch.abs(layer.q_proj.impacts) > eps, dim=0)
+                layer_dsn[domain_name]["q_proj"] = torch.all(torch.abs(layer.q_proj.impacts) > eps, dim=0).reshape(-1, 1)
             else:
-                layer_dsn[domain_name]["q_proj"] = layer_dsn[domain_name]["q_proj"] * torch.all(torch.abs(layer.q_proj.impacts) > eps, dim=0)
-            layer_dsn[domain_name]["k_proj"] = layer_dsn[domain_name]["q_proj"]
+                layer_dsn[domain_name]["q_proj"] = layer_dsn[domain_name]["q_proj"] * torch.all(torch.abs(layer.q_proj.impacts) > eps, dim=0).reshape(-1, 1)
+            layer_dsn[domain_name]["k_proj"] = layer_dsn[domain_name]["q_proj"].reshape(1, -1)
 
             if reset_impacts:
                 layer.q_proj.impacts = None
@@ -189,6 +190,7 @@ def detect_domain_specific_neurons(
     reset_dsn=True,
     num_elements=10000
 ):
+    
     model.eval()
 
     if dataloader is not None:
@@ -216,3 +218,39 @@ def detect_domain_specific_neurons(
         )
 
     return model, outputs
+
+
+def dsn_model_grads_to_train(model):
+
+    for param in model.parameters():
+        param.requires_grad = False
+
+    for layer in model.layers:
+        for param in layer.mlp.parameters():
+            param.requires_grad = True
+        for param in layer.self_attn.q_proj.parameters():
+            param.requires_grad = True
+        for param in layer.self_attn.k_proj.parameters():
+            param.requires_grad = True
+    return model
+
+
+def dsn_model_mask_gradients(
+    model,
+    domain="eng"
+):
+    for i, layer in enumerate(model.layers):
+
+        if layer.mlp.dsn is not None:
+            layer.mlp.up_proj._grad = layer.mlp.up_proj._grad * (~layer.mlp.dsn[domain]["up_proj"])
+            layer.mlp.down_proj._grad = layer.mlp.down_proj._grad * (~layer.mlp.dsn[domain]["down_proj"])
+        else:
+            warnings.warn(f"layers[{i}].mlp domain specific neurons mask is not defined!", UserWarning)
+
+        if layer.self_attn.dsn is not None:
+            layer.mlp.self_attn.q_proj._grad = layer.mlp.self_attn.q_proj._grad * (~layer.mlp.dsn[domain]["q_proj"])
+            layer.mlp.self_attn.k_proj._grad = layer.mlp.self_attn.k_proj._grad * (~layer.mlp.dsn[domain]["k_proj"])
+        else:
+            warnings.warn(f"layers[{i}].self_attn domain specific neurons mask is not defined!", UserWarning)
+    
+    return model
