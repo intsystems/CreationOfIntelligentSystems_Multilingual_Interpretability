@@ -125,3 +125,4 @@ weekly_talks/
 
 */xcr_dataset
 *.pt
+*:Zone.Identifier
