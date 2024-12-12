@@ -142,7 +142,6 @@ def detect_domain_specific_neurons_for_layer(
             if reset_impacts:
                 layer.q_proj.impacts = None
                 layer.k_proj.impacts = None
-
     torch.cuda.empty_cache()
     layer.dsn = layer_dsn
     return layer
@@ -161,19 +160,23 @@ def calculate_impacts(
             i = 0
             while i < num_elements:
                 try:
-                    batch = next(dataloader_iter)
-                    pbar.update(len(batch))
-                    output = model(batch[0].to('cuda'), batch[1].to('cuda'))
-                    outputs.append(output["last_hidden_state"].cpu())
+                    _batch, label = next(dataloader_iter)
+                    pbar.update(len(_batch))
+                    batch = {}
+                    for k, v in _batch.items():
+                        batch[k] = v.to(next(model.parameters()).device)
+                    output = model(**batch)
+                    outputs.append(output["logits"].cpu())
                     i += len(batch)
                 except StopIteration:
                     break
 
-    max_size = max(tensor.size(1) for tensor in outputs)
+    max_size = max(tensor.size(0) for tensor in outputs)
 
     padded_tensors = [
-        F.pad(tensor, (0, 0, 0, max_size - tensor.size(1))) for tensor in outputs
+        F.pad(tensor, (0, 0, 0, max_size - tensor.size(0))) for tensor in outputs
     ]
+
 
     concatenated_tensor = torch.cat(padded_tensors, dim=1)
 

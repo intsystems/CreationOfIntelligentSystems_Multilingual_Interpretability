@@ -122,3 +122,6 @@ logs/
 !.dvc
 
 weekly_talks/
+
+*/xcr_dataset
+*.pt
