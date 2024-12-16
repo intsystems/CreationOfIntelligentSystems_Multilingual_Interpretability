@@ -20,3 +20,17 @@ class Qwen2ForMultipleChoice(nn.Module):
         logits = self.score(output_vector)
         logits = logits.reshape(batch_size, self.num_classes)
         return {'logits': logits}
+    
+class Qwen2ForXLangMultipleChoice(Qwen2ForMultipleChoice):
+    def __init__(self, model, num_classes, torch_dtype=torch.float32, domain_list: list[str] = ['eng']):
+        super().__init__(model, num_classes, torch_dtype)
+        self.embedings_for_domains: dict[str, nn.Embedding] = {}
+        self.domain_list = domain_list 
+        self.last_used_domain = ''
+        for domain in domain_list:
+            self.embedings_for_domains[domain] = self.model.embed_tokens
+            self.last_used_domain = domain
+    def set_domain(self, domain):
+        if(domain != self.last_used_domain):
+            self.embedings_for_domains[self.last_used_domain] = self.model.embed_tokens
+            self.model.embed_tokens = self.embedings_for_domains[domain]

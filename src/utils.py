@@ -112,11 +112,11 @@ def detect_domain_specific_neurons_for_layer(
 ):  
     assert type in ['mlp', 'attn']
 
-    if hasattr(layer, "dsn") and not reset_dsn:
+    if hasattr(layer, "dsn") and not reset_dsn and (layer.dsn is not None):
         layer_dsn = layer.dsn
     else:
-        layer_dsn = {domain_name: {}}
-    
+        layer_dsn = {}
+    layer_dsn.setdefault(domain_name, {})
 
     if type == 'mlp':
         if layer.up_proj.impacts is not None:
